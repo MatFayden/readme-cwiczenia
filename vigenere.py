@@ -1,7 +1,6 @@
 def szyfruj_vigenere(tekst, klucz):
     wynik = ""
     key_index = 0
-
     tekst = tekst.upper()
     klucz = klucz.upper()
 
@@ -10,27 +9,55 @@ def szyfruj_vigenere(tekst, klucz):
             wartosc_litery = ord(litera) - ord('A')
             wartosc_klucza = ord(klucz[key_index % len(klucz)]) - ord('A')
 
+            # Szyfrowanie: (L + K) % 26
             zaszyfrowana_wartosc = (wartosc_litery + wartosc_klucza) % 26
-            zaszyfrowana_litera = chr(zaszyfrowana_wartosc + ord('A'))
-
-            wynik += zaszyfrowana_litera
+            wynik += chr(zaszyfrowana_wartosc + ord('A'))
             key_index += 1
         else:
             wynik += litera
-
     return wynik
 
 
-def test_vigenere():
-    tekst = "HELLO WORLD"
-    klucz = "KEY"
-    wynik = szyfruj_vigenere(tekst, klucz)
+def deszyfruj_vigenere(zaszyfrowany_tekst, klucz):
+    wynik = ""
+    key_index = 0
+    zaszyfrowany_tekst = zaszyfrowany_tekst.upper()
+    klucz = klucz.upper()
 
-    print("=== Szyfr Vigenere'a ===")
-    print("Tekst:", tekst)
-    print("Klucz:", klucz)
-    print("Wynik:", wynik)
+    for litera in zaszyfrowany_tekst:
+        if 'A' <= litera <= 'Z':
+            wartosc_litery = ord(litera) - ord('A')
+            wartosc_klucza = ord(klucz[key_index % len(klucz)]) - ord('A')
+
+            # Deszyfrowanie: (L - K) % 26
+            # Python poprawnie obsługuje modulo z liczb ujemnych
+            odszyfrowana_wartosc = (wartosc_litery - wartosc_klucza) % 26
+            wynik += chr(odszyfrowana_wartosc + ord('A'))
+            key_index += 1
+        else:
+            wynik += litera
+    return wynik
 
 
 if __name__ == "__main__":
-    test_vigenere()
+    # 1. Dane wejściowe
+    oryginalny_tekst = "PROGRAMOWANIE JEST SUPER"
+    klucz = "abc"
+
+    # 2. Szyfrowanie
+    zaszyfrowany = szyfruj_vigenere(oryginalny_tekst, klucz)
+
+    # 3. Deszyfrowanie
+    odszyfrowany = deszyfruj_vigenere(zaszyfrowany, klucz)
+
+    # 4. Sprawdzenie wyników
+    print("=== TEST SZYFRU VIGENERE'A ===")
+    print(f"Oryginał:    {oryginalny_tekst}")
+    print(f"Klucz:       {klucz}")
+    print(f"Zaszyfrowany: {zaszyfrowany}")
+    print(f"Odszyfrowany: {odszyfrowany}")
+
+    if oryginalny_tekst == odszyfrowany:
+        print("\nSUKCES: Tekst odszyfrowany jest identyczny z oryginalnym!")
+    else:
+        print("\nBŁĄD: Teksty się różnią.")

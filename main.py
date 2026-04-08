@@ -1,4 +1,4 @@
-from cezar import szyfruj_cezara
+import cezar
 from vigenere import szyfruj_vigenere
 
 
@@ -11,7 +11,7 @@ def main():
     print("\n=== Test szyfru Cezara ===")
     print("Tekst:", tekst)
     print("Klucz:", 3)
-    print("Wynik:", szyfruj_cezara(tekst, 3))
+    print("Wynik:", cezar.cezar(tekst, 3))
 
     print("\n=== Test szyfru Vigenere'a ===")
     print("Tekst:", tekst)
