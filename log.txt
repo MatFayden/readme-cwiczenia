@@ -1,0 +1,18 @@
+*   0046d70 Merge pull request #1 from MatFayden/vigenere
+|\  
+| * 596e342 dodanie cezara
+* | ad75f07 Poprawa implementacji szyfru Cezara
+|/  
+* 9eb1a30 Integracja szyfrow Cezara i Vigenere w main.py
+*   9d79740 Merge branch 'vigenere'
+|\  
+| * f247194 Implementacja szyfru Vigenere
+* | 92652bb dodanie cezara
+|/  
+* 8e5a949 Dodanie main.py
+*   53a8043 Merge branch 'twoj-branch' into main
+|\  
+| * 9e60c3a Dodanie README, gitignore, workflow i main.py
+* | 637c39c Create python.yml
+|/  
+* 55c9457 Initial commit

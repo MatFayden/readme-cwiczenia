@@ -4,10 +4,11 @@ from cezar import cezar, lamanie_cezara
 @pytest.mark.basic
 @pytest.mark.parametrize("napis, klucz, expected", [
     ("abc", 1, "BCD"),
+    ("abc", 2, "CDE"),
     ("XYZ", 3, "ABC"),
     ("Hello World!", 5, "MJQQT BTWQI!"),
     ("", 10, ""),
-], ids=["prosty", "zawijanie", "znaki_specjalne", "pusty"])
+], ids=["shift_1", "shift_2", "zawijanie", "znaki_specjalne", "pusty"])
 def test_cezar_parametrized(napis, klucz, expected):
     assert cezar(napis, klucz) == expected
 

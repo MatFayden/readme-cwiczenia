@@ -16,8 +16,10 @@ def test_vigenere_with_fixture(default_key):
 @pytest.mark.parametrize("tekst, klucz, expected", [
     ("AAA", "A", "AAA"),
     ("ABCDE", "AB", "ACCEE"),
+    ("AAAAA", "CDE", "CDECD"),  # A(0)+C(2)=C, A(0)+D(3)=D, A(0)+E(4)=E, A(0)+C(2)=C, A(0)+D(3)=D -> CDECD
     ("Z", "B", "A"),
-    ("HELLO WORLD!", "KEY", "RIJVS UYVJN!"),], ids=["zero_shift", "loop_key", "wrap_z", "special_chars"])
+    ("HELLO WORLD!", "KEY", "RIJVS UYVJN!"),
+], ids=["zero_shift", "loop_key", "consecutive_shifts", "wrap_z", "special_chars"])
 def test_vigenere_parametrized(tekst, klucz, expected):
     assert szyfruj_vigenere(tekst, klucz) == expected
 
@@ -25,6 +27,9 @@ def test_vigenere_parametrized(tekst, klucz, expected):
 def test_vigenere_empty_key():
     with pytest.raises(ValueError):
         szyfruj_vigenere("ABC", "")
+    with pytest.raises(ValueError):
+        deszyfruj_vigenere("ABC", "")
+
 
 @pytest.mark.extended
 def test_vigenere_long_text(default_key):

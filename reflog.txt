@@ -1,0 +1,19 @@
+0046d70 HEAD@{0}: pull: Fast-forward
+ad75f07 HEAD@{1}: merge fix-cezar: Fast-forward
+9eb1a30 HEAD@{2}: checkout: moving from fix-cezar to main
+ad75f07 HEAD@{3}: commit: Poprawa implementacji szyfru Cezara
+9eb1a30 HEAD@{4}: checkout: moving from main to fix-cezar
+9eb1a30 HEAD@{5}: commit: Integracja szyfrow Cezara i Vigenere w main.py
+9d79740 HEAD@{6}: checkout: moving from main to main
+9d79740 HEAD@{7}: merge vigenere: Merge made by the 'ort' strategy.
+92652bb HEAD@{8}: pull: Fast-forward
+8e5a949 HEAD@{9}: checkout: moving from vigenere to main
+f247194 HEAD@{10}: commit: Implementacja szyfru Vigenere
+8e5a949 HEAD@{11}: checkout: moving from main to vigenere
+8e5a949 HEAD@{12}: commit: Dodanie main.py
+53a8043 HEAD@{13}: commit (merge): Merge branch 'twoj-branch' into main
+637c39c HEAD@{14}: pull: Fast-forward
+55c9457 HEAD@{15}: checkout: moving from twoj-branch to main
+9e60c3a HEAD@{16}: commit: Dodanie README, gitignore, workflow i main.py
+55c9457 HEAD@{17}: checkout: moving from main to twoj-branch
+55c9457 HEAD@{18}: clone: from https://github.com/MatFayden/readme-cwiczenia.git
