@@ -1,0 +1,155 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="pl" data-content_root="../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>test_vigenere &mdash; Szyfry 1.0 - dokumentacja</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=331e28ce"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/translations.js?v=2827c288"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Indeks" href="../genindex.html" />
+    <link rel="search" title="Szukaj" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Szyfry
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Szukaj" aria-label="Szukaj" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Spis treści:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html">readme-cwiczenia</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Szyfry</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Kod modułu</a></li>
+      <li class="breadcrumb-item active">test_vigenere</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Kod źródłowy modułu test_vigenere</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pytest</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">vigenere</span><span class="w"> </span><span class="kn">import</span> <span class="n">szyfruj_vigenere</span><span class="p">,</span> <span class="n">deszyfruj_vigenere</span>
+
+<div class="viewcode-block" id="default_key">
+<a class="viewcode-back" href="../test_vigenere.html#test_vigenere.default_key">[dokumentacja]</a>
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">default_key</span><span class="p">():</span>
+    <span class="k">return</span> <span class="s2">&quot;SECRET&quot;</span></div>
+
+
+<div class="viewcode-block" id="test_vigenere_with_fixture">
+<a class="viewcode-back" href="../test_vigenere.html#test_vigenere.test_vigenere_with_fixture">[dokumentacja]</a>
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">basic</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_vigenere_with_fixture</span><span class="p">(</span><span class="n">default_key</span><span class="p">):</span>
+    <span class="n">tekst</span> <span class="o">=</span> <span class="s2">&quot;HELLO&quot;</span>
+    <span class="n">zaszyfrowany</span> <span class="o">=</span> <span class="n">szyfruj_vigenere</span><span class="p">(</span><span class="n">tekst</span><span class="p">,</span> <span class="n">default_key</span><span class="p">)</span>
+    <span class="n">odszyfrowany</span> <span class="o">=</span> <span class="n">deszyfruj_vigenere</span><span class="p">(</span><span class="n">zaszyfrowany</span><span class="p">,</span> <span class="n">default_key</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">odszyfrowany</span> <span class="o">==</span> <span class="n">tekst</span></div>
+
+
+<div class="viewcode-block" id="test_vigenere_parametrized">
+<a class="viewcode-back" href="../test_vigenere.html#test_vigenere.test_vigenere_parametrized">[dokumentacja]</a>
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">basic</span>
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">parametrize</span><span class="p">(</span><span class="s2">&quot;tekst, klucz, expected&quot;</span><span class="p">,</span> <span class="p">[</span>
+    <span class="p">(</span><span class="s2">&quot;AAA&quot;</span><span class="p">,</span> <span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;AAA&quot;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;ABCDE&quot;</span><span class="p">,</span> <span class="s2">&quot;AB&quot;</span><span class="p">,</span> <span class="s2">&quot;ACCEE&quot;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;AAAAA&quot;</span><span class="p">,</span> <span class="s2">&quot;CDE&quot;</span><span class="p">,</span> <span class="s2">&quot;CDECD&quot;</span><span class="p">),</span>  <span class="c1"># A(0)+C(2)=C, A(0)+D(3)=D, A(0)+E(4)=E, A(0)+C(2)=C, A(0)+D(3)=D -&gt; CDECD</span>
+    <span class="p">(</span><span class="s2">&quot;Z&quot;</span><span class="p">,</span> <span class="s2">&quot;B&quot;</span><span class="p">,</span> <span class="s2">&quot;A&quot;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;HELLO WORLD!&quot;</span><span class="p">,</span> <span class="s2">&quot;KEY&quot;</span><span class="p">,</span> <span class="s2">&quot;RIJVS UYVJN!&quot;</span><span class="p">),</span>
+<span class="p">],</span> <span class="n">ids</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;zero_shift&quot;</span><span class="p">,</span> <span class="s2">&quot;loop_key&quot;</span><span class="p">,</span> <span class="s2">&quot;consecutive_shifts&quot;</span><span class="p">,</span> <span class="s2">&quot;wrap_z&quot;</span><span class="p">,</span> <span class="s2">&quot;special_chars&quot;</span><span class="p">])</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_vigenere_parametrized</span><span class="p">(</span><span class="n">tekst</span><span class="p">,</span> <span class="n">klucz</span><span class="p">,</span> <span class="n">expected</span><span class="p">):</span>
+    <span class="k">assert</span> <span class="n">szyfruj_vigenere</span><span class="p">(</span><span class="n">tekst</span><span class="p">,</span> <span class="n">klucz</span><span class="p">)</span> <span class="o">==</span> <span class="n">expected</span></div>
+
+
+<div class="viewcode-block" id="test_vigenere_empty_key">
+<a class="viewcode-back" href="../test_vigenere.html#test_vigenere.test_vigenere_empty_key">[dokumentacja]</a>
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">exceptions</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_vigenere_empty_key</span><span class="p">():</span>
+    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">):</span>
+        <span class="n">szyfruj_vigenere</span><span class="p">(</span><span class="s2">&quot;ABC&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">):</span>
+        <span class="n">deszyfruj_vigenere</span><span class="p">(</span><span class="s2">&quot;ABC&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="test_vigenere_long_text">
+<a class="viewcode-back" href="../test_vigenere.html#test_vigenere.test_vigenere_long_text">[dokumentacja]</a>
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">extended</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_vigenere_long_text</span><span class="p">(</span><span class="n">default_key</span><span class="p">):</span>
+    <span class="n">tekst</span> <span class="o">=</span> <span class="s2">&quot;TO JEST BARDZO DLUGI TEKST DO TESTOWANIA SZYFRU VIGENEREA&quot;</span>
+    <span class="n">zaszyfrowany</span> <span class="o">=</span> <span class="n">szyfruj_vigenere</span><span class="p">(</span><span class="n">tekst</span><span class="p">,</span> <span class="n">default_key</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">deszyfruj_vigenere</span><span class="p">(</span><span class="n">szyfruj_vigenere</span><span class="p">(</span><span class="n">tekst</span><span class="p">,</span> <span class="n">default_key</span><span class="p">),</span> <span class="n">default_key</span><span class="p">)</span> <span class="o">==</span> <span class="n">tekst</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Prawa zastrzeżone 2026, AI Assistant.</p>
+  </div>
+
+  Zbudowano w <a href="https://www.sphinx-doc.org/">Sphinx</a> używając
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    dostarczone przez <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

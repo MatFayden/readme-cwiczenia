@@ -1,0 +1,903 @@
+commit e2a35243799a361c27eecbd1ef8b7795fb2202f5
+Author: tomaszkrawczyk1 <tomek7839.krawczyk@gmail.com>
+Date:   Wed Apr 22 09:10:14 2026 +0200
+
+    test: finalize tests according to specific Person A/B requirements
+
+diff --git a/.coverage b/.coverage
+new file mode 100644
+index 0000000..0674c00
+Binary files /dev/null and b/.coverage differ
+diff --git a/.~lock.cwiczenia.docx# b/.~lock.cwiczenia.docx#
+new file mode 100644
+index 0000000..7292511
+--- /dev/null
++++ b/.~lock.cwiczenia.docx#
+@@ -0,0 +1 @@
++,thinkpad,fedora,22.04.2026 07:00,/home/thinkpad/.local/share/onlyoffice;
+\ No newline at end of file
+diff --git "a/.~lock.\304\206wiczenia_testowanie.docx#" "b/.~lock.\304\206wiczenia_testowanie.docx#"
+new file mode 100644
+index 0000000..3964785
+--- /dev/null
++++ "b/.~lock.\304\206wiczenia_testowanie.docx#"
+@@ -0,0 +1 @@
++,thinkpad,fedora,22.04.2026 07:09,/home/thinkpad/.local/share/onlyoffice;
+\ No newline at end of file
+diff --git a/cwiczenia.docx b/cwiczenia.docx
+new file mode 100644
+index 0000000..228bebb
+Binary files /dev/null and b/cwiczenia.docx differ
+diff --git a/log.txt b/log.txt
+new file mode 100644
+index 0000000..e108e14
+--- /dev/null
++++ b/log.txt
+@@ -0,0 +1,18 @@
++*   0046d70 Merge pull request #1 from MatFayden/vigenere
++|\  
++| * 596e342 dodanie cezara
++* | ad75f07 Poprawa implementacji szyfru Cezara
++|/  
++* 9eb1a30 Integracja szyfrow Cezara i Vigenere w main.py
++*   9d79740 Merge branch 'vigenere'
++|\  
++| * f247194 Implementacja szyfru Vigenere
++* | 92652bb dodanie cezara
++|/  
++* 8e5a949 Dodanie main.py
++*   53a8043 Merge branch 'twoj-branch' into main
++|\  
++| * 9e60c3a Dodanie README, gitignore, workflow i main.py
++* | 637c39c Create python.yml
++|/  
++* 55c9457 Initial commit
+diff --git a/reflog.txt b/reflog.txt
+new file mode 100644
+index 0000000..12519d3
+--- /dev/null
++++ b/reflog.txt
+@@ -0,0 +1,19 @@
++0046d70 HEAD@{0}: pull: Fast-forward
++ad75f07 HEAD@{1}: merge fix-cezar: Fast-forward
++9eb1a30 HEAD@{2}: checkout: moving from fix-cezar to main
++ad75f07 HEAD@{3}: commit: Poprawa implementacji szyfru Cezara
++9eb1a30 HEAD@{4}: checkout: moving from main to fix-cezar
++9eb1a30 HEAD@{5}: commit: Integracja szyfrow Cezara i Vigenere w main.py
++9d79740 HEAD@{6}: checkout: moving from main to main
++9d79740 HEAD@{7}: merge vigenere: Merge made by the 'ort' strategy.
++92652bb HEAD@{8}: pull: Fast-forward
++8e5a949 HEAD@{9}: checkout: moving from vigenere to main
++f247194 HEAD@{10}: commit: Implementacja szyfru Vigenere
++8e5a949 HEAD@{11}: checkout: moving from main to vigenere
++8e5a949 HEAD@{12}: commit: Dodanie main.py
++53a8043 HEAD@{13}: commit (merge): Merge branch 'twoj-branch' into main
++637c39c HEAD@{14}: pull: Fast-forward
++55c9457 HEAD@{15}: checkout: moving from twoj-branch to main
++9e60c3a HEAD@{16}: commit: Dodanie README, gitignore, workflow i main.py
++55c9457 HEAD@{17}: checkout: moving from main to twoj-branch
++55c9457 HEAD@{18}: clone: from https://github.com/MatFayden/readme-cwiczenia.git
+diff --git a/test_caesar.py b/test_caesar.py
+index 18bcd8d..eaf4b0a 100644
+--- a/test_caesar.py
++++ b/test_caesar.py
+@@ -4,10 +4,11 @@ from cezar import cezar, lamanie_cezara
+ @pytest.mark.basic
+ @pytest.mark.parametrize("napis, klucz, expected", [
+     ("abc", 1, "BCD"),
++    ("abc", 2, "CDE"),
+     ("XYZ", 3, "ABC"),
+     ("Hello World!", 5, "MJQQT BTWQI!"),
+     ("", 10, ""),
+-], ids=["prosty", "zawijanie", "znaki_specjalne", "pusty"])
++], ids=["shift_1", "shift_2", "zawijanie", "znaki_specjalne", "pusty"])
+ def test_cezar_parametrized(napis, klucz, expected):
+     assert cezar(napis, klucz) == expected
+ 
+diff --git a/test_vigenere.py b/test_vigenere.py
+index 33499c2..b55bbd3 100644
+--- a/test_vigenere.py
++++ b/test_vigenere.py
+@@ -16,8 +16,10 @@ def test_vigenere_with_fixture(default_key):
+ @pytest.mark.parametrize("tekst, klucz, expected", [
+     ("AAA", "A", "AAA"),
+     ("ABCDE", "AB", "ACCEE"),
++    ("AAAAA", "CDE", "CDECD"),  # A(0)+C(2)=C, A(0)+D(3)=D, A(0)+E(4)=E, A(0)+C(2)=C, A(0)+D(3)=D -> CDECD
+     ("Z", "B", "A"),
+-    ("HELLO WORLD!", "KEY", "RIJVS UYVJN!"),], ids=["zero_shift", "loop_key", "wrap_z", "special_chars"])
++    ("HELLO WORLD!", "KEY", "RIJVS UYVJN!"),
++], ids=["zero_shift", "loop_key", "consecutive_shifts", "wrap_z", "special_chars"])
+ def test_vigenere_parametrized(tekst, klucz, expected):
+     assert szyfruj_vigenere(tekst, klucz) == expected
+ 
+@@ -25,6 +27,9 @@ def test_vigenere_parametrized(tekst, klucz, expected):
+ def test_vigenere_empty_key():
+     with pytest.raises(ValueError):
+         szyfruj_vigenere("ABC", "")
++    with pytest.raises(ValueError):
++        deszyfruj_vigenere("ABC", "")
++
+ 
+ @pytest.mark.extended
+ def test_vigenere_long_text(default_key):
+diff --git "a/\304\206wiczenia_testowanie.docx" "b/\304\206wiczenia_testowanie.docx"
+new file mode 100644
+index 0000000..2940d00
+Binary files /dev/null and "b/\304\206wiczenia_testowanie.docx" differ
+
+commit e45e24efd842820397964de2a865281bdd513e95
+Author: tomaszkrawczyk1 <tomek7839.krawczyk@gmail.com>
+Date:   Wed Apr 22 09:06:55 2026 +0200
+
+    test: add comprehensive test suite with parametrize, fixtures and markers
+
+diff --git a/.github/workflows/python.yml b/.github/workflows/python.yml
+index dc2a4a9..cebc122 100644
+--- a/.github/workflows/python.yml
++++ b/.github/workflows/python.yml
+@@ -4,19 +4,25 @@ on:
+   push:
+     branches:
+       - main
+-      - cezar
+-      - vigenere
++      - feat-cipher-improvements
+   pull_request:
+     branches:
+       - main
+ 
+ jobs:
+-  build:
++  test:
+     runs-on: ubuntu-latest
+ 
+     steps:
+       - uses: actions/checkout@v3
+-      - uses: actions/setup-python@v4
++      - name: Set up Python
++        uses: actions/setup-python@v4
+         with:
+           python-version: '3.10'
+-      - run: python -m py_compile *.py
++      - name: Install dependencies
++        run: |
++          python -m pip install --upgrade pip
++          pip install pytest pytest-cov
++      - name: Run tests
++        run: |
++          pytest --cov=. --cov-report=term-missing
+diff --git a/pytest.ini b/pytest.ini
+new file mode 100644
+index 0000000..dfaf143
+--- /dev/null
++++ b/pytest.ini
+@@ -0,0 +1,5 @@
++[pytest]
++markers =
++    basic: testy podstawowych funkcjonalności
++    exceptions: testy sprawdzające rzucanie wyjątków przy błędnych danych
++    extended: testy rozszerzone i długie przypadki
+diff --git a/test_caesar.py b/test_caesar.py
+new file mode 100644
+index 0000000..18bcd8d
+--- /dev/null
++++ b/test_caesar.py
+@@ -0,0 +1,31 @@
++import pytest
++from cezar import cezar, lamanie_cezara
++
++@pytest.mark.basic
++@pytest.mark.parametrize("napis, klucz, expected", [
++    ("abc", 1, "BCD"),
++    ("XYZ", 3, "ABC"),
++    ("Hello World!", 5, "MJQQT BTWQI!"),
++    ("", 10, ""),
++], ids=["prosty", "zawijanie", "znaki_specjalne", "pusty"])
++def test_cezar_parametrized(napis, klucz, expected):
++    assert cezar(napis, klucz) == expected
++
++@pytest.mark.extended
++def test_cezar_decrypt():
++    original = "TESTOWANIE"
++    encrypted = cezar(original, 7)
++    decrypted = cezar(encrypted, -7)
++    assert decrypted == original
++
++@pytest.mark.extended
++def test_cezar_lamanie():
++    oryginal = "LOKOMOTYWA STOI NA STACJI"
++    zaszyfrowane = cezar(oryginal, 10)
++    wynik = lamanie_cezara(zaszyfrowane)
++    assert oryginal == wynik
++
++@pytest.mark.exceptions
++def test_cezar_wrong_type():
++    with pytest.raises(TypeError):
++        cezar(123, 5)
+diff --git a/test_main.py b/test_main.py
+new file mode 100644
+index 0000000..39b3117
+--- /dev/null
++++ b/test_main.py
+@@ -0,0 +1,20 @@
++import pytest
++from main import generuj_klucz
++
++@pytest.mark.basic
++def test_generuj_klucz_cezar():
++    klucz = generuj_klucz("cezar")
++    assert isinstance(klucz, int)
++    assert 1 <= klucz <= 25
++
++@pytest.mark.basic
++def test_generuj_klucz_vigenere():
++    klucz = generuj_klucz("vigenere", 15)
++    assert isinstance(klucz, str)
++    assert len(klucz) == 15
++    assert klucz.isupper()
++
++@pytest.mark.exceptions
++def test_generuj_klucz_invalid():
++    with pytest.raises(ValueError):
++        generuj_klucz("unknown")
+diff --git a/test_vigenere.py b/test_vigenere.py
+new file mode 100644
+index 0000000..33499c2
+--- /dev/null
++++ b/test_vigenere.py
+@@ -0,0 +1,33 @@
++import pytest
++from vigenere import szyfruj_vigenere, deszyfruj_vigenere
++
++@pytest.fixture
++def default_key():
++    return "SECRET"
++
++@pytest.mark.basic
++def test_vigenere_with_fixture(default_key):
++    tekst = "HELLO"
++    zaszyfrowany = szyfruj_vigenere(tekst, default_key)
++    odszyfrowany = deszyfruj_vigenere(zaszyfrowany, default_key)
++    assert odszyfrowany == tekst
++
++@pytest.mark.basic
++@pytest.mark.parametrize("tekst, klucz, expected", [
++    ("AAA", "A", "AAA"),
++    ("ABCDE", "AB", "ACCEE"),
++    ("Z", "B", "A"),
++    ("HELLO WORLD!", "KEY", "RIJVS UYVJN!"),], ids=["zero_shift", "loop_key", "wrap_z", "special_chars"])
++def test_vigenere_parametrized(tekst, klucz, expected):
++    assert szyfruj_vigenere(tekst, klucz) == expected
++
++@pytest.mark.exceptions
++def test_vigenere_empty_key():
++    with pytest.raises(ValueError):
++        szyfruj_vigenere("ABC", "")
++
++@pytest.mark.extended
++def test_vigenere_long_text(default_key):
++    tekst = "TO JEST BARDZO DLUGI TEKST DO TESTOWANIA SZYFRU VIGENEREA"
++    zaszyfrowany = szyfruj_vigenere(tekst, default_key)
++    assert deszyfruj_vigenere(szyfruj_vigenere(tekst, default_key), default_key) == tekst.upper()
+
+commit eb337d501b4cfb36c5ca7fb1ef0e7198344307f6
+Author: tomaszkrawczyk1 <tomek7839.krawczyk@gmail.com>
+Date:   Wed Apr 22 09:06:51 2026 +0200
+
+    feat: add random key generator and execution time measurement
+
+diff --git a/main.py b/main.py
+index 22a0d85..14996ff 100644
+--- a/main.py
++++ b/main.py
+@@ -1,23 +1,50 @@
+ import cezar
+ from vigenere import szyfruj_vigenere
++import secrets
++import string
++import time
+ 
++def generuj_klucz(rodzaj, dlugosc=10):
++    if rodzaj == "cezar":
++        return secrets.choice(range(1, 26))
++    elif rodzaj == "vigenere":
++        return ''.join(secrets.choice(string.ascii_uppercase) for _ in range(dlugosc))
++    else:
++        raise ValueError("Nieznany rodzaj szyfru")
+ 
+ def main():
+-    print("Autorzy programu: osoba od Cezara, osoba od Vigenere'a")
++    print("Autorzy programu: AI Assistant")
+     print("Obsługiwane szyfry: Cezara, Vigenere'a")
+ 
+-    tekst = "HELLO WORLD"
+-
+-    print("\n=== Test szyfru Cezara ===")
+-    print("Tekst:", tekst)
+-    print("Klucz:", 3)
+-    print("Wynik:", cezar.cezar(tekst, 3))
+-
+-    print("\n=== Test szyfru Vigenere'a ===")
+-    print("Tekst:", tekst)
+-    print("Klucz:", "KEY")
+-    print("Wynik:", szyfruj_vigenere(tekst, "KEY"))
++    tekst = "PROGRAMOWANIE W PYTHONIE JEST CIEKAWE!"
++    
++    # Cezar
++    klucz_cezar = generuj_klucz("cezar")
++    start = time.perf_counter()
++    wynik_cezar = cezar.cezar(tekst, klucz_cezar)
++    koniec = time.perf_counter()
++    czas_cezar = koniec - start
++    
++    print(f"\n=== Szyfr Cezara ===")
++    print(f"Tekst: {tekst}")
++    print(f"Klucz: {klucz_cezar}")
++    print(f"Wynik: {wynik_cezar}")
++    print(f"Czas:  {czas_cezar:.6f}s")
+ 
++    # Vigenere
++    klucz_vigenere = generuj_klucz("vigenere", 5)
++    start = time.perf_counter()
++    wynik_vigenere = szyfruj_vigenere(tekst, klucz_vigenere)
++    koniec = time.perf_counter()
++    czas_vigenere = koniec - start
++    
++    print(f"\n=== Szyfr Vigenere'a ===")
++    print(f"Tekst: {tekst}")
++    print(f"Klucz: {klucz_vigenere}")
++    print(f"Wynik: {wynik_vigenere}")
++    print(f"Czas:  {czas_vigenere:.6f}s")
++    
++    print(f"\nPorównanie czasów: {'Vigenere wolniejszy' if czas_vigenere > czas_cezar else 'Cezar wolniejszy'}")
+ 
+ if __name__ == "__main__":
+     main()
+
+commit cafc3ba969e5ebd51ad155d9edbbd532dda81803
+Author: tomaszkrawczyk1 <tomek7839.krawczyk@gmail.com>
+Date:   Wed Apr 22 09:06:49 2026 +0200
+
+    fix: add error handling for empty key in Vigenere cipher
+
+diff --git a/vigenere.py b/vigenere.py
+index b967a98..d10d7e6 100644
+--- a/vigenere.py
++++ b/vigenere.py
+@@ -1,11 +1,14 @@
+ def szyfruj_vigenere(tekst, klucz):
++    if not klucz:
++        raise ValueError("Klucz nie może być pusty")
++        
+     wynik = ""
+     key_index = 0
+     tekst = tekst.upper()
+     klucz = klucz.upper()
+ 
+     for litera in tekst:
+-        if 'A' <= litera <= 'Z':
++        if litera.isalpha():
+             wartosc_litery = ord(litera) - ord('A')
+             wartosc_klucza = ord(klucz[key_index % len(klucz)]) - ord('A')
+ 
+@@ -19,18 +22,20 @@ def szyfruj_vigenere(tekst, klucz):
+ 
+ 
+ def deszyfruj_vigenere(zaszyfrowany_tekst, klucz):
++    if not klucz:
++        raise ValueError("Klucz nie może być pusty")
++        
+     wynik = ""
+     key_index = 0
+     zaszyfrowany_tekst = zaszyfrowany_tekst.upper()
+     klucz = klucz.upper()
+ 
+     for litera in zaszyfrowany_tekst:
+-        if 'A' <= litera <= 'Z':
++        if litera.isalpha():
+             wartosc_litery = ord(litera) - ord('A')
+             wartosc_klucza = ord(klucz[key_index % len(klucz)]) - ord('A')
+ 
+             # Deszyfrowanie: (L - K) % 26
+-            # Python poprawnie obsługuje modulo z liczb ujemnych
+             odszyfrowana_wartosc = (wartosc_litery - wartosc_klucza) % 26
+             wynik += chr(odszyfrowana_wartosc + ord('A'))
+             key_index += 1
+@@ -40,24 +45,9 @@ def deszyfruj_vigenere(zaszyfrowany_tekst, klucz):
+ 
+ 
+ if __name__ == "__main__":
+-    # 1. Dane wejściowe
+-    oryginalny_tekst = "PROGRAMOWANIE JEST SUPER"
++    oryginalny_tekst = "PROGRAMOWANIE JEST SUPER!"
+     klucz = "abc"
+-
+-    # 2. Szyfrowanie
+     zaszyfrowany = szyfruj_vigenere(oryginalny_tekst, klucz)
+-
+-    # 3. Deszyfrowanie
+     odszyfrowany = deszyfruj_vigenere(zaszyfrowany, klucz)
+-
+-    # 4. Sprawdzenie wyników
+-    print("=== TEST SZYFRU VIGENERE'A ===")
+-    print(f"Oryginał:    {oryginalny_tekst}")
+-    print(f"Klucz:       {klucz}")
+     print(f"Zaszyfrowany: {zaszyfrowany}")
+     print(f"Odszyfrowany: {odszyfrowany}")
+-
+-    if oryginalny_tekst == odszyfrowany:
+-        print("\nSUKCES: Tekst odszyfrowany jest identyczny z oryginalnym!")
+-    else:
+-        print("\nBŁĄD: Teksty się różnią.")
+\ No newline at end of file
+
+commit 9ab3c74fa99e8959500d01d700dc2aef010517ea
+Author: tomaszkrawczyk1 <tomek7839.krawczyk@gmail.com>
+Date:   Wed Apr 22 09:06:45 2026 +0200
+
+    feat: improve Caesar cipher with Polish frequency analysis and error handling
+
+diff --git a/cezar.py b/cezar.py
+index 53c84dc..239093e 100644
+--- a/cezar.py
++++ b/cezar.py
+@@ -1,16 +1,46 @@
+-def szyfruj_cezara(tekst: str, klucz: int) -> str:
+-    wynik = ""
++import string
+ 
+-    for litera in tekst:
++def cezar(napis: str, klucz: int) -> str:
++    if not isinstance(napis, str) or not isinstance(klucz, int):
++        raise TypeError("zły typ danych")
++    
++    wynik = ""
++    for litera in napis:
+         if litera.isalpha():
+-            kod_bazowy = 65 if litera.isupper() else 97
+-            nowy_kod = (ord(litera) - kod_bazowy + klucz) % 26 + kod_bazowy
++            # Ujednolicenie wielkości liter do wielkich (zgodnie z sugestią o zmianie wielkości)
++            litera_up = litera.upper()
++            kod_bazowy = ord('A')
++            nowy_kod = (ord(litera_up) - kod_bazowy + klucz) % 26 + kod_bazowy
+             wynik += chr(nowy_kod)
+         else:
+             wynik += litera
+-
+     return wynik
+ 
++def analiza_czestotliwosci(napis: str) -> int:
++    # Częste litery w języku polskim
++    czeste_litery = "aieozn"
++    punkty = 0
++    for litera in napis.lower():
++        if litera in czeste_litery:
++            punkty += 1
++    return punkty
++
++def lamanie_cezara(napis: str) -> str:
++    najlepszy_wynik = -1
++    najlepszy_tekst = ""
++    
++    for klucz in range(26):
++        # Deszyfrowanie to szyfrowanie z ujemnym kluczem
++        probowany_tekst = cezar(napis, -klucz)
++        punkty = analiza_czestotliwosci(probowany_tekst)
++        
++        if punkty > najlepszy_wynik:
++            najlepszy_wynik = punkty
++            najlepszy_tekst = probowany_tekst
++            
++    return najlepszy_tekst
+ 
+ if __name__ == "__main__":
+-    print(szyfruj_cezara("HASLO", 3))
++    test = "ZALZ"
++    print(f"Szyfrowanie 'ALFA' klucz 3: {cezar('ALFA', 3)}")
++    print(f"Łamanie 'ZALZ': {lamanie_cezara(test)}")
+
+commit 0046d70ddd0840b5edd48a97411267175bf86727
+Merge: ad75f07 596e342
+Author: MatFayden <64275144+MatFayden@users.noreply.github.com>
+Date:   Wed Apr 8 10:14:19 2026 +0200
+
+    Merge pull request #1 from MatFayden/vigenere
+    
+    dodanie cezara
+
+commit 596e342016e6d4af84ad25c6e7e485235052382c
+Author: Your Name <you@example.com>
+Date:   Wed Apr 8 10:03:59 2026 +0200
+
+    dodanie cezara
+
+diff --git a/main.py b/main.py
+index 93a9bb9..22a0d85 100644
+--- a/main.py
++++ b/main.py
+@@ -1,4 +1,4 @@
+-from cezar import szyfruj_cezara
++import cezar
+ from vigenere import szyfruj_vigenere
+ 
+ 
+@@ -11,7 +11,7 @@ def main():
+     print("\n=== Test szyfru Cezara ===")
+     print("Tekst:", tekst)
+     print("Klucz:", 3)
+-    print("Wynik:", szyfruj_cezara(tekst, 3))
++    print("Wynik:", cezar.cezar(tekst, 3))
+ 
+     print("\n=== Test szyfru Vigenere'a ===")
+     print("Tekst:", tekst)
+diff --git a/vigenere.py b/vigenere.py
+index d09706d..b967a98 100644
+--- a/vigenere.py
++++ b/vigenere.py
+@@ -1,7 +1,6 @@
+ def szyfruj_vigenere(tekst, klucz):
+     wynik = ""
+     key_index = 0
+-
+     tekst = tekst.upper()
+     klucz = klucz.upper()
+ 
+@@ -10,27 +9,55 @@ def szyfruj_vigenere(tekst, klucz):
+             wartosc_litery = ord(litera) - ord('A')
+             wartosc_klucza = ord(klucz[key_index % len(klucz)]) - ord('A')
+ 
++            # Szyfrowanie: (L + K) % 26
+             zaszyfrowana_wartosc = (wartosc_litery + wartosc_klucza) % 26
+-            zaszyfrowana_litera = chr(zaszyfrowana_wartosc + ord('A'))
+-
+-            wynik += zaszyfrowana_litera
++            wynik += chr(zaszyfrowana_wartosc + ord('A'))
+             key_index += 1
+         else:
+             wynik += litera
+-
+     return wynik
+ 
+ 
+-def test_vigenere():
+-    tekst = "HELLO WORLD"
+-    klucz = "KEY"
+-    wynik = szyfruj_vigenere(tekst, klucz)
++def deszyfruj_vigenere(zaszyfrowany_tekst, klucz):
++    wynik = ""
++    key_index = 0
++    zaszyfrowany_tekst = zaszyfrowany_tekst.upper()
++    klucz = klucz.upper()
++
++    for litera in zaszyfrowany_tekst:
++        if 'A' <= litera <= 'Z':
++            wartosc_litery = ord(litera) - ord('A')
++            wartosc_klucza = ord(klucz[key_index % len(klucz)]) - ord('A')
+ 
+-    print("=== Szyfr Vigenere'a ===")
+-    print("Tekst:", tekst)
+-    print("Klucz:", klucz)
+-    print("Wynik:", wynik)
++            # Deszyfrowanie: (L - K) % 26
++            # Python poprawnie obsługuje modulo z liczb ujemnych
++            odszyfrowana_wartosc = (wartosc_litery - wartosc_klucza) % 26
++            wynik += chr(odszyfrowana_wartosc + ord('A'))
++            key_index += 1
++        else:
++            wynik += litera
++    return wynik
+ 
+ 
+ if __name__ == "__main__":
+-    test_vigenere()
++    # 1. Dane wejściowe
++    oryginalny_tekst = "PROGRAMOWANIE JEST SUPER"
++    klucz = "abc"
++
++    # 2. Szyfrowanie
++    zaszyfrowany = szyfruj_vigenere(oryginalny_tekst, klucz)
++
++    # 3. Deszyfrowanie
++    odszyfrowany = deszyfruj_vigenere(zaszyfrowany, klucz)
++
++    # 4. Sprawdzenie wyników
++    print("=== TEST SZYFRU VIGENERE'A ===")
++    print(f"Oryginał:    {oryginalny_tekst}")
++    print(f"Klucz:       {klucz}")
++    print(f"Zaszyfrowany: {zaszyfrowany}")
++    print(f"Odszyfrowany: {odszyfrowany}")
++
++    if oryginalny_tekst == odszyfrowany:
++        print("\nSUKCES: Tekst odszyfrowany jest identyczny z oryginalnym!")
++    else:
++        print("\nBŁĄD: Teksty się różnią.")
+\ No newline at end of file
+
+commit ad75f07265028d6eecdb47ec7449154c5d3798d0
+Author: tomaszkrawczyk1 <tomek7839.krawczyk@gmail.com>
+Date:   Wed Apr 8 09:59:23 2026 +0200
+
+    Poprawa implementacji szyfru Cezara
+
+diff --git a/cezar.py b/cezar.py
+index 185a00f..53c84dc 100644
+--- a/cezar.py
++++ b/cezar.py
+@@ -1,9 +1,16 @@
+-def cezar(tekst: str, klucz: int):
++def szyfruj_cezara(tekst: str, klucz: int) -> str:
+     wynik = ""
++
+     for litera in tekst:
++        if litera.isalpha():
+             kod_bazowy = 65 if litera.isupper() else 97
+             nowy_kod = (ord(litera) - kod_bazowy + klucz) % 26 + kod_bazowy
+             wynik += chr(nowy_kod)
++        else:
++            wynik += litera
++
+     return wynik
+ 
+-print(cezar("haslo", 3))
+\ No newline at end of file
++
++if __name__ == "__main__":
++    print(szyfruj_cezara("HASLO", 3))
+
+commit 9eb1a308565d664ca9be24ce723b5949ddb5fea1
+Author: tomaszkrawczyk1 <tomek7839.krawczyk@gmail.com>
+Date:   Wed Apr 8 09:46:34 2026 +0200
+
+    Integracja szyfrow Cezara i Vigenere w main.py
+
+diff --git a/main.py b/main.py
+index fc32c57..93a9bb9 100644
+--- a/main.py
++++ b/main.py
+@@ -1,5 +1,23 @@
++from cezar import szyfruj_cezara
++from vigenere import szyfruj_vigenere
++
++
+ def main():
+-    print("Hello CI")
++    print("Autorzy programu: osoba od Cezara, osoba od Vigenere'a")
++    print("Obsługiwane szyfry: Cezara, Vigenere'a")
++
++    tekst = "HELLO WORLD"
++
++    print("\n=== Test szyfru Cezara ===")
++    print("Tekst:", tekst)
++    print("Klucz:", 3)
++    print("Wynik:", szyfruj_cezara(tekst, 3))
++
++    print("\n=== Test szyfru Vigenere'a ===")
++    print("Tekst:", tekst)
++    print("Klucz:", "KEY")
++    print("Wynik:", szyfruj_vigenere(tekst, "KEY"))
++
+ 
+ if __name__ == "__main__":
+     main()
+
+commit 9d79740fd5738eb0dc8514a249cc80f7a7a30db8
+Merge: 92652bb f247194
+Author: tomaszkrawczyk1 <tomek7839.krawczyk@gmail.com>
+Date:   Wed Apr 8 09:45:36 2026 +0200
+
+    Merge branch 'vigenere'
+
+commit 92652bb2a8d1f71e0efd9f3b158546c763154f5c
+Author: Your Name <you@example.com>
+Date:   Wed Apr 8 09:38:12 2026 +0200
+
+    dodanie cezara
+
+diff --git a/cezar.py b/cezar.py
+new file mode 100644
+index 0000000..185a00f
+--- /dev/null
++++ b/cezar.py
+@@ -0,0 +1,9 @@
++def cezar(tekst: str, klucz: int):
++    wynik = ""
++    for litera in tekst:
++            kod_bazowy = 65 if litera.isupper() else 97
++            nowy_kod = (ord(litera) - kod_bazowy + klucz) % 26 + kod_bazowy
++            wynik += chr(nowy_kod)
++    return wynik
++
++print(cezar("haslo", 3))
+\ No newline at end of file
+
+commit f2471947930ce0357a7a491c332eb4053e3a4eac
+Author: tomaszkrawczyk1 <tomek7839.krawczyk@gmail.com>
+Date:   Wed Apr 8 09:35:40 2026 +0200
+
+    Implementacja szyfru Vigenere
+
+diff --git a/vigenere.py b/vigenere.py
+new file mode 100644
+index 0000000..d09706d
+--- /dev/null
++++ b/vigenere.py
+@@ -0,0 +1,36 @@
++def szyfruj_vigenere(tekst, klucz):
++    wynik = ""
++    key_index = 0
++
++    tekst = tekst.upper()
++    klucz = klucz.upper()
++
++    for litera in tekst:
++        if 'A' <= litera <= 'Z':
++            wartosc_litery = ord(litera) - ord('A')
++            wartosc_klucza = ord(klucz[key_index % len(klucz)]) - ord('A')
++
++            zaszyfrowana_wartosc = (wartosc_litery + wartosc_klucza) % 26
++            zaszyfrowana_litera = chr(zaszyfrowana_wartosc + ord('A'))
++
++            wynik += zaszyfrowana_litera
++            key_index += 1
++        else:
++            wynik += litera
++
++    return wynik
++
++
++def test_vigenere():
++    tekst = "HELLO WORLD"
++    klucz = "KEY"
++    wynik = szyfruj_vigenere(tekst, klucz)
++
++    print("=== Szyfr Vigenere'a ===")
++    print("Tekst:", tekst)
++    print("Klucz:", klucz)
++    print("Wynik:", wynik)
++
++
++if __name__ == "__main__":
++    test_vigenere()
+
+commit 8e5a9495391da47a398700c7a2c0a6640b5f359a
+Author: tomaszkrawczyk1 <tomek7839.krawczyk@gmail.com>
+Date:   Wed Apr 8 09:21:17 2026 +0200
+
+    Dodanie main.py
+
+diff --git a/main.py b/main.py
+new file mode 100644
+index 0000000..fc32c57
+--- /dev/null
++++ b/main.py
+@@ -0,0 +1,5 @@
++def main():
++    print("Hello CI")
++
++if __name__ == "__main__":
++    main()
+
+commit 53a80439f51b1554b20c8ae63380b289f00fa722
+Merge: 637c39c 9e60c3a
+Author: tomaszkrawczyk1 <tomek7839.krawczyk@gmail.com>
+Date:   Wed Apr 8 09:16:09 2026 +0200
+
+    Merge branch 'twoj-branch' into main
+
+commit 9e60c3ad3ffc24a6c0384c57a930ec5957530224
+Author: tomaszkrawczyk1 <tomek7839.krawczyk@gmail.com>
+Date:   Wed Apr 8 09:06:34 2026 +0200
+
+    Dodanie README, gitignore, workflow i main.py
+
+diff --git a/.github/workflows/python.yml b/.github/workflows/python.yml
+new file mode 100644
+index 0000000..dc2a4a9
+--- /dev/null
++++ b/.github/workflows/python.yml
+@@ -0,0 +1,22 @@
++name: Python CI
++
++on:
++  push:
++    branches:
++      - main
++      - cezar
++      - vigenere
++  pull_request:
++    branches:
++      - main
++
++jobs:
++  build:
++    runs-on: ubuntu-latest
++
++    steps:
++      - uses: actions/checkout@v3
++      - uses: actions/setup-python@v4
++        with:
++          python-version: '3.10'
++      - run: python -m py_compile *.py
+diff --git a/.gitignore b/.gitignore
+new file mode 100644
+index 0000000..7057e0a
+--- /dev/null
++++ b/.gitignore
+@@ -0,0 +1,6 @@
++.venv/
++venv/
++__pycache__/
++*.pyc
++.idea/
++.vscode/
+diff --git a/tokeny/token.txt b/tokeny/token.txt
+new file mode 100644
+index 0000000..b2cac66
+--- /dev/null
++++ b/tokeny/token.txt
+@@ -0,0 +1 @@
++ufiewhfiuewf
+
+commit 637c39c0ae148064ffbdb5feda90f92a87c92998
+Author: MatFayden <64275144+MatFayden@users.noreply.github.com>
+Date:   Wed Apr 8 09:01:24 2026 +0200
+
+    Create python.yml
+
+diff --git a/.github/workflows/python.yml b/.github/workflows/python.yml
+new file mode 100644
+index 0000000..01502b1
+--- /dev/null
++++ b/.github/workflows/python.yml
+@@ -0,0 +1,36 @@
++# This is a basic workflow to help you get started with Actions
++
++name: CI
++
++# Controls when the workflow will run
++on:
++  # Triggers the workflow on push or pull request events but only for the "main" branch
++  push:
++    branches: [ "main" ]
++  pull_request:
++    branches: [ "main" ]
++
++  # Allows you to run this workflow manually from the Actions tab
++  workflow_dispatch:
++
++# A workflow run is made up of one or more jobs that can run sequentially or in parallel
++jobs:
++  # This workflow contains a single job called "build"
++  build:
++    # The type of runner that the job will run on
++    runs-on: ubuntu-latest
++
++    # Steps represent a sequence of tasks that will be executed as part of the job
++    steps:
++      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
++      - uses: actions/checkout@v4
++
++      # Runs a single command using the runners shell
++      - name: Run a one-line script
++        run: echo Hello, world!
++
++      # Runs a set of commands using the runners shell
++      - name: Run a multi-line script
++        run: |
++          echo Add other actions to build,
++          echo test, and deploy your project.
+
+commit 55c945753b1052777b163d5c33f28916ebd072c0
+Author: MatFayden <64275144+MatFayden@users.noreply.github.com>
+Date:   Wed Apr 8 08:44:56 2026 +0200
+
+    Initial commit
+
+diff --git a/README.md b/README.md
+new file mode 100644
+index 0000000..ee31fd0
+--- /dev/null
++++ b/README.md
+@@ -0,0 +1 @@
++# readme-cwiczenia
+\ No newline at end of file

@@ -1,4 +1,16 @@
 def szyfruj_vigenere(tekst, klucz):
+    """Szyfruje tekst za pomocą szyfru Vigenère'a.
+
+    Args:
+        tekst (str): Tekst do zaszyfrowania.
+        klucz (str): Słowo kluczowe.
+
+    Returns:
+        str: Zaszyfrowany tekst (wielkie litery).
+
+    Raises:
+        ValueError: Jeśli klucz jest pusty.
+    """
     if not klucz:
         raise ValueError("Klucz nie może być pusty")
         
@@ -12,7 +24,6 @@ def szyfruj_vigenere(tekst, klucz):
             wartosc_litery = ord(litera) - ord('A')
             wartosc_klucza = ord(klucz[key_index % len(klucz)]) - ord('A')
 
-            # Szyfrowanie: (L + K) % 26
             zaszyfrowana_wartosc = (wartosc_litery + wartosc_klucza) % 26
             wynik += chr(zaszyfrowana_wartosc + ord('A'))
             key_index += 1
@@ -22,6 +33,18 @@ def szyfruj_vigenere(tekst, klucz):
 
 
 def deszyfruj_vigenere(zaszyfrowany_tekst, klucz):
+    """Deszyfruje tekst zaszyfrowany szyfrem Vigenère'a.
+
+    Args:
+        zaszyfrowany_tekst (str): Tekst do odszyfrowania.
+        klucz (str): Słowo kluczowe użyte do szyfrowania.
+
+    Returns:
+        str: Odszyfrowany tekst (wielkie litery).
+
+    Raises:
+        ValueError: Jeśli klucz jest pusty.
+    """
     if not klucz:
         raise ValueError("Klucz nie może być pusty")
         
@@ -35,7 +58,6 @@ def deszyfruj_vigenere(zaszyfrowany_tekst, klucz):
             wartosc_litery = ord(litera) - ord('A')
             wartosc_klucza = ord(klucz[key_index % len(klucz)]) - ord('A')
 
-            # Deszyfrowanie: (L - K) % 26
             odszyfrowana_wartosc = (wartosc_litery - wartosc_klucza) % 26
             wynik += chr(odszyfrowana_wartosc + ord('A'))
             key_index += 1

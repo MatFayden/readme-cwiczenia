@@ -1,3 +1,8 @@
+* e2a3524 test: finalize tests according to specific Person A/B requirements
+* e45e24e test: add comprehensive test suite with parametrize, fixtures and markers
+* eb337d5 feat: add random key generator and execution time measurement
+* cafc3ba fix: add error handling for empty key in Vigenere cipher
+* 9ab3c74 feat: improve Caesar cipher with Polish frequency analysis and error handling
 *   0046d70 Merge pull request #1 from MatFayden/vigenere
 |\  
 | * 596e342 dodanie cezara
