@@ -1,5 +1,7 @@
 # Projekt Szyfrowania (Cezar & Vigenère)
 
+![Python Logo](https://www.python.org/static/community_logos/python-logo-master-v3-TM.png)
+
 Ten projekt zawiera implementację dwóch klasycznych szyfrów: szyfru Cezara oraz szyfru Vigenère'a w języku Python. Projekt został przygotowany w celach edukacyjnych, demonstrując podstawy kryptografii oraz dobrych praktyk programistycznych (testy, dokumentacja, CI).
 
 ## Funkcje projektu
